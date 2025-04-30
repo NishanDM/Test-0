@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      text-align: center;
+    }
+    .item {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .item img {
+      width: 100px;
+      height: auto;
+      border-radius: 5px;
+    }
+    .details {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <h2>Item List</h2>
+  <div id="itemsContainer"></div>
+
+  <script>
+    async function fetchItems() {
+      const res = await fetch('/api/items');
+      const items = await res.json();
+
+      const container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" />
+          <div class="details">
+            <h3>${item.name}</h3>
+            <p><strong>Description:</strong> ${item.description}</p>
+            <p><strong>Price:</strong> ₹${item.price}</p>
+            <p><strong>Warranty:</strong> ${item.warranty} months</p>
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    fetchItems();
+  </script>
+</body>
+</html>

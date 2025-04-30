@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Add Item</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    form {
+      background: #fff;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #message {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Add New Item</h2>
+  <form id="itemForm">
+    <label for="name">Item Name:</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="image">Item Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required />
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="0.01" required />
+
+    <label for="warranty">Warranty Period (in months):</label>
+    <input type="number" id="warranty" name="warranty" required />
+
+    <button type="submit">Add Item</button>
+    <p id="message"></p>
+  </form>
+
+  <script>
+    const form = document.getElementById('itemForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // prevent default form submission
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/items', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          message.style.color = 'green';
+          message.textContent = 'Item added successfully!';
+          form.reset(); // clear form
+        } else {
+          message.style.color = 'red';
+          message.textContent = result.error || 'Failed to add item.';
+        }
+      } catch (error) {
+        console.error(error);
+        message.style.color = 'red';
+        message.textContent = 'An error occurred.';
+      }
+    });
+  </script>
+</body>
+</html>
